@@ -50,6 +50,7 @@ Deno.test({
         v1[key],
         // @ts-ignore
         v2[key],
+        `"${key}" for FileInfo should be same`,
       );
     }
 
@@ -109,6 +110,7 @@ Deno.test({
         fileInfo[key],
         // @ts-ignore
         expected[key],
+        `"${key}" for FileInfo should be same`,
       );
     }
 
