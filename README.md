@@ -12,10 +12,10 @@ Because it needs to be loaded into memory, it is not recommended to bundle large
 
 ### Usage
 
-1. Install the command line tool
+1. Install the command line tool    
 
 ```bash
-$ deno install -A --unstable https://raw.githubusercontent.com/axetroy/deno_pkger/master/pkger.ts
+$ deno install -A --unstable -f https://raw.githubusercontent.com/axetroy/deno_pkger/master/pkger.ts
 ```
 
 2. Generate file from static resource
