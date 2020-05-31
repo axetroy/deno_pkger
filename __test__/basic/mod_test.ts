@@ -9,6 +9,7 @@ async function generate() {
       Deno.execPath(),
       "run",
       "-A",
+      "--unstable",
       "./pkger.ts",
       "--include=./__test__/basic/static",
       "--out=./__test__/basic/dist",
