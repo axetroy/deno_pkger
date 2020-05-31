@@ -1,3 +1,5 @@
+[![Build Status](https://github.com/axetroy/deno_pkger/workflows/test/badge.svg)](https://github.com/axetroy/deno_pkger/actions)
+
 ### Deno General Resources Packager
 
 This is very painful for loading static resources
