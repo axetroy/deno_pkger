@@ -1,12 +1,14 @@
-import { IVirtualFile } from "./virtual_file.ts";
+import { VirtualFile, IVirtualFile } from "./virtual_file.ts";
 
-const fileMaps = new Map<string, IVirtualFile>();
+const fileMaps = new Map<string, VirtualFile>();
 
-export function _loadFile(filepath: string, file: IVirtualFile) {
+export function _loadFile(filepath: string, file: VirtualFile) {
   fileMaps.set(filepath, file);
 }
 
 interface VirtualFileSystem {
+  open(path: string, options?: Deno.OpenOptions): Promise<Deno.File>;
+  openSync(path: string, options?: Deno.OpenOptions): Deno.File;
   stat(path: string): Promise<Deno.FileInfo>;
   statSync(path: string): Deno.FileInfo;
   readFile(path: string): Promise<Uint8Array>;
@@ -24,6 +26,18 @@ interface VirtualFileSystem {
 }
 
 const fileSystem: VirtualFileSystem = {
+  async open(path: string, options?: Deno.OpenOptions): Promise<Deno.File> {
+    return this.openSync(path, options);
+  },
+  openSync(path: string, options?: Deno.OpenOptions): Deno.File {
+    const file = fileMaps.get(path);
+
+    if (!file) {
+      throw Deno.errors.NotFound;
+    }
+
+    return file._clone();
+  },
   async stat(path: string) {
     return fileSystem.statSync(path);
   },
@@ -31,10 +45,9 @@ const fileSystem: VirtualFileSystem = {
     const file = fileMaps.get(path);
 
     if (!file) {
-      throw new Error(`file ${path} doest not exist`);
+      throw Deno.errors.NotFound;
     }
 
-    // @ts-ignore
     return file._info;
   },
   async readFile(path: string) {
@@ -44,10 +57,9 @@ const fileSystem: VirtualFileSystem = {
     const file = fileMaps.get(path);
 
     if (!file) {
-      throw new Error(`file ${path} doest not exist`);
+      throw Deno.errors.NotFound;
     }
 
-    // @ts-ignore
     return file._content;
   },
   async writeFile(
@@ -65,14 +77,11 @@ const fileSystem: VirtualFileSystem = {
     const file = fileMaps.get(path);
 
     if (!file) {
-      throw new Error(`file ${path} doest not exist`);
+      throw Deno.errors.NotFound;
     }
 
-    // @ts-ignore
     file._content = data;
-    // @ts-ignore
     file._info.size = data.length;
-    // @ts-ignore
     file._info.mtime = new Date();
   },
 };

@@ -13,7 +13,9 @@ export interface IVirtualFile
     Deno.WriterSync,
     Deno.Seeker,
     Deno.SeekerSync,
-    Deno.Closer {}
+    Deno.Closer {
+  rid: number;
+}
 
 export class VirtualFile implements IVirtualFile {
   #now = new Date();
@@ -40,6 +42,12 @@ export class VirtualFile implements IVirtualFile {
   constructor(public readonly rid: number) {
   }
   _content: Uint8Array = new Uint8Array();
+  _clone(): IVirtualFile {
+    const file = new VirtualFile(this.rid);
+    file._content = this._content;
+    file._info = this._info;
+    return file;
+  }
   async write(p: Uint8Array): Promise<number> {
     return this.writeSync(p);
   }
@@ -76,5 +84,6 @@ export class VirtualFile implements IVirtualFile {
   }
   close(): void {
     this._closed = true;
+    this._content = new Uint8Array();
   }
 }
