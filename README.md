@@ -1,4 +1,4 @@
-[![Build Status](https://github.com/axetroy/deno_pkger/workflows/test/badge.svg)](https://github.com/axetroy/deno_pkger/actions)
+[![Build Status](https://github.com/axetroy/deno_pkger/workflows/ci/badge.svg)](https://github.com/axetroy/deno_pkger/actions)
 
 ### Deno General Resources Packager
 

@@ -1,5 +1,5 @@
 on: push
-name: test
+name: ci
 jobs:
   test:
     runs-on: ${{ matrix.os }}
