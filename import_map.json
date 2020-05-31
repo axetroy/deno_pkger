@@ -1,0 +1,5 @@
+{
+  "imports": {
+    "https://denopkg.com/axetroy/deno_pkger/mod.ts": "./mod.ts"
+  }
+}
