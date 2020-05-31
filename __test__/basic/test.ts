@@ -68,27 +68,56 @@ Deno.test({
 
     const fileInfo = JSON.parse(output) as Deno.FileInfo;
 
-    assertEquals(
-      fileInfo,
-      {
-        isFile: true,
-        isDirectory: false,
-        isSymlink: false,
-        size: 13,
-        mtime: "2020-05-31T09:25:10.906Z",
-        atime: "2020-05-31T09:28:50.589Z",
-        birthtime: "2020-05-31T09:24:50.303Z",
-        dev: 16777220,
-        ino: 4400738686,
-        mode: 33188,
-        nlink: 1,
-        uid: 501,
-        gid: 20,
-        rdev: 0,
-        blksize: 4096,
-        blocks: 8,
-      },
-    );
+    const expected: Deno.FileInfo = {
+      isFile: true,
+      isDirectory: false,
+      isSymlink: false,
+      size: 13,
+      mtime: new Date("2020-05-31T09:25:10.906Z"),
+      atime: new Date("2020-05-31T09:28:50.589Z"),
+      birthtime: new Date("2020-05-31T09:24:50.303Z"),
+      dev: 16777220,
+      ino: 4400738686,
+      mode: 33188,
+      nlink: 1,
+      uid: 501,
+      gid: 20,
+      rdev: 0,
+      blksize: 4096,
+      blocks: 8,
+    };
+
+    const keys = [
+      "isFile",
+      "isDirectory",
+      "isSymlink",
+      "size",
+      "mtime",
+      "atime",
+      "birthtime",
+      "dev",
+      "ino",
+      "mod",
+      "nlink",
+      "uid",
+      "gid",
+      "rdev",
+      "blksize",
+      "blocks",
+    ];
+
+    for (const key of keys) {
+      assertEquals(
+        // @ts-ignore
+        fileInfo[key],
+        // @ts-ignore
+        ["mtime", "atime", "birthtime"].includes(key)
+          ? // @ts-ignore
+            expected[key].toISOString()
+          : // @ts-ignore
+            expected[key],
+      );
+    }
 
     ps.stdout?.close();
     ps.stderr?.close();
