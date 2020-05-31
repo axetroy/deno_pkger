@@ -50,7 +50,7 @@ async function generateBundle(dir: string, outDir: string) {
     const targetFile = path.join(
       outDir,
       fileName + ".bundle.ts",
-    );
+    ).replace(/\\/g, "/");
 
     const content = `// Generate by https://github.com/axetroy/deno_pkger
 // DO NOT MODIFY IT
