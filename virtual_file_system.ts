@@ -23,12 +23,17 @@ interface VirtualFileSystem {
     data: Uint8Array,
     options?: Deno.WriteFileOptions,
   ): void;
+  remove(path: string, options?: Deno.RemoveOptions): Promise<void>;
+  removeSync(path: string, options?: Deno.RemoveOptions): void;
 }
+
+Deno.remove;
 
 const fileSystem: VirtualFileSystem = {
   async open(path: string, options?: Deno.OpenOptions): Promise<Deno.File> {
-    return this.openSync(path, options);
+    return fileSystem.openSync(path, options);
   },
+  // TODO: apply options
   openSync(path: string, options?: Deno.OpenOptions): Deno.File {
     const file = fileMaps.get(path);
 
@@ -69,7 +74,7 @@ const fileSystem: VirtualFileSystem = {
   ) {
     return fileSystem.writeFileSync(path, data, options);
   },
-  async writeFileSync(
+  writeFileSync(
     path: string,
     data: Uint8Array,
     options?: Deno.WriteFileOptions,
@@ -83,6 +88,20 @@ const fileSystem: VirtualFileSystem = {
     file._content = data;
     file._info.size = data.length;
     file._info.mtime = new Date();
+  },
+
+  // TODO: apply options
+  async remove(path: string, options?: Deno.RemoveOptions) {
+    return fileSystem.removeSync(path, options);
+  },
+  removeSync(path: string, options?: Deno.RemoveOptions) {
+    const file = fileMaps.get(path);
+
+    if (!file) {
+      throw Deno.errors.NotFound;
+    }
+
+    fileMaps.delete(path);
   },
 };
 
