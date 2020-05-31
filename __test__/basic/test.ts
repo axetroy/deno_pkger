@@ -119,3 +119,38 @@ Deno.test({
     ps.close();
   },
 });
+
+Deno.test({
+  name: "test readfile",
+  fn: async () => {
+    const ps = Deno.run({
+      cmd: [
+        Deno.execPath(),
+        "run",
+        "-A",
+        "--unstable",
+        "--importmap=./import_map.json",
+        "./__test__/basic/readfile.ts",
+        "--include=./__test__/basic/static",
+        "--out=./__test__/basic/dist",
+      ],
+      stdout: "piped",
+    });
+
+    const output = new TextDecoder().decode(await Deno.readAll(ps.stdout!))
+      .trim();
+
+    await ps.status();
+
+    assertEquals(
+      output,
+      new TextDecoder().decode(
+        await Deno.readFile("./__test__/basic/static/README.md"),
+      ).trim(),
+    );
+
+    ps.stdout?.close();
+    ps.stderr?.close();
+    ps.close();
+  },
+});
