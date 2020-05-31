@@ -25,9 +25,9 @@ interface VirtualFileSystem {
   ): void;
   remove(path: string, options?: Deno.RemoveOptions): Promise<void>;
   removeSync(path: string, options?: Deno.RemoveOptions): void;
+  create(path: string): Promise<Deno.File>;
+  createSync(path: string): Deno.File;
 }
-
-Deno.remove;
 
 const fileSystem: VirtualFileSystem = {
   async open(path: string, options?: Deno.OpenOptions): Promise<Deno.File> {
@@ -102,6 +102,24 @@ const fileSystem: VirtualFileSystem = {
     }
 
     fileMaps.delete(path);
+  },
+  async create(path: string) {
+    return fileSystem.create(path);
+  },
+  createSync(path: string) {
+    {
+      const file = fileMaps.get(path);
+
+      if (file) {
+        throw Deno.errors.AlreadyExists;
+      }
+    }
+
+    const file = VirtualFile.create();
+
+    fileMaps.set(path, file);
+
+    return file;
   },
 };
 

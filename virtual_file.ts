@@ -19,6 +19,10 @@ export interface IVirtualFile
 
 export class VirtualFile implements IVirtualFile {
   #now = new Date();
+  static create(): VirtualFile {
+    // use random rid
+    return new VirtualFile(0);
+  }
   public _info: Deno.FileInfo = {
     isFile: true,
     isDirectory: false,
