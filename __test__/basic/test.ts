@@ -8,18 +8,6 @@ const keys = [
   "isDirectory",
   "isSymlink",
   "size",
-  "mtime",
-  "atime",
-  "birthtime",
-  "dev",
-  "ino",
-  "mod",
-  "nlink",
-  "uid",
-  "gid",
-  "rdev",
-  "blksize",
-  "blocks",
 ];
 
 async function generate() {
@@ -57,9 +45,6 @@ Deno.test({
     ]);
 
     for (const key of keys) {
-      if (["mtime", "atime", "birthtime"].includes(key)) {
-        continue;
-      }
       assertEquals(
         // @ts-ignore
         v1[key],
@@ -119,9 +104,6 @@ Deno.test({
     };
 
     for (const key of keys) {
-      if (["mtime", "atime", "birthtime"].includes(key)) {
-        continue;
-      }
       assertEquals(
         // @ts-ignore
         fileInfo[key],
