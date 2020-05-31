@@ -89,7 +89,7 @@ Deno.test({
       isFile: true,
       isDirectory: false,
       isSymlink: false,
-      size: 13,
+      size: 13 + (Deno.build.os === "windows" ? 1 : 0),
       mtime: new Date("2020-05-31T09:25:10.906Z"),
       atime: new Date("2020-05-31T09:28:50.589Z"),
       birthtime: new Date("2020-05-31T09:24:50.303Z"),

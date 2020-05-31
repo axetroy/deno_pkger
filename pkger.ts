@@ -67,9 +67,6 @@ ${getInfo().map((v) => "  " + v).join(",\n")}
 _loadFile("${fileName.replace(/\\/g, "/")}", file)
 `;
 
-    console.log("Output file content");
-    console.log(content);
-
     await ensureDir(path.dirname(targetFile));
 
     await Deno.writeFile(
