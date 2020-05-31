@@ -1,3 +1,3 @@
 *.bundle.ts
-
+*.DS_Store
 dist

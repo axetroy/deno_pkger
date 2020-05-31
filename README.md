@@ -60,4 +60,8 @@ console.log(stat)
 //   blksize: 4096,
 //   blocks: 8
 // }
+
+const bytes = fs.readFile('/index.html')
+
+const reader = fs.open('/index.html')
 ```
