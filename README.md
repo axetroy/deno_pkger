@@ -61,7 +61,11 @@ console.log(stat)
 //   blocks: 8
 // }
 
-const bytes = fs.readFile('/index.html')
+const bytes = await fs.readFile('/index.html')
 
-const reader = fs.open('/index.html')
+console.log(bytes)
+
+const reader = await fs.open('/index.html')
+
+reader.write(new Uint8Array([97, 98, 99, 100]))
 ```
