@@ -3,6 +3,25 @@ import {
 } from "https://deno.land/std@v0.54.0/testing/asserts.ts";
 import fs from "../../mod.ts";
 
+const keys = [
+  "isFile",
+  "isDirectory",
+  "isSymlink",
+  "size",
+  "mtime",
+  "atime",
+  "birthtime",
+  "dev",
+  "ino",
+  "mod",
+  "nlink",
+  "uid",
+  "gid",
+  "rdev",
+  "blksize",
+  "blocks",
+];
+
 async function generate() {
   const ps = Deno.run({
     cmd: [
@@ -32,10 +51,22 @@ Deno.test({
   fn: async () => {
     await import("./dist/README.md.bundle.ts");
 
-    assertEquals(
+    const [v1, v2] = await Promise.all([
       await fs.stat("/README.md"),
       await Deno.stat("./__test__/basic/static/README.md"),
-    );
+    ]);
+
+    for (const key of keys) {
+      if (["mtime", "atime", "birthtime"].includes(key)) {
+        continue;
+      }
+      assertEquals(
+        // @ts-ignore
+        v1[key],
+        // @ts-ignore
+        v2[key],
+      );
+    }
 
     assertEquals(
       await fs.readFile("/README.md"),
@@ -87,35 +118,15 @@ Deno.test({
       blocks: 8,
     };
 
-    const keys = [
-      "isFile",
-      "isDirectory",
-      "isSymlink",
-      "size",
-      "mtime",
-      "atime",
-      "birthtime",
-      "dev",
-      "ino",
-      "mod",
-      "nlink",
-      "uid",
-      "gid",
-      "rdev",
-      "blksize",
-      "blocks",
-    ];
-
     for (const key of keys) {
+      if (["mtime", "atime", "birthtime"].includes(key)) {
+        continue;
+      }
       assertEquals(
         // @ts-ignore
         fileInfo[key],
         // @ts-ignore
-        ["mtime", "atime", "birthtime"].includes(key)
-          ? // @ts-ignore
-            expected[key].toISOString()
-          : // @ts-ignore
-            expected[key],
+        expected[key],
       );
     }
 
