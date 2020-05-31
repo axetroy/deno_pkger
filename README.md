@@ -11,7 +11,7 @@ Load from a virtual file system
 1. Install the command line tool
 
 ```bash
-$ deno install -A --unstable https://github.com/axetroy/deno_pkg/pkger.ts
+$ deno install -A --unstable https://raw.githubusercontent.com/axetroy/deno_pkger/master/pkger.ts
 ```
 
 2. Generate file from static resource

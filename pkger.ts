@@ -45,6 +45,13 @@ async function generateBundle(dir: string, outDir: string) {
       return values;
     }
 
+    const fileName = fileInfo.path.replace(dir, "");
+
+    const targetFile = path.join(
+      outDir,
+      fileName + ".bundle.ts",
+    );
+
     const content = `// Generate by https://github.com/axetroy/deno_pkger
 // DO NOT MODIFY IT
 import { VirtualFile, _loadFile } from "https://denopkg.com/axetroy/deno_pkger/mod.ts"
@@ -57,13 +64,8 @@ file._info = {
 ${getInfo().map((v) => "  " + v).join(",\n")}
 };
 
-_loadFile("/${fileInfo.name}", file)
+_loadFile("${fileName}", file)
 `;
-
-    const targetFile = path.join(
-      outDir,
-      fileInfo.path.replace(dir, "") + ".bundle.ts",
-    );
 
     await ensureDir(path.dirname(targetFile));
 
