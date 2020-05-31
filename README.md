@@ -2,11 +2,13 @@
 
 ### Deno General Resources Packager
 
-This is very painful for loading static resources
+It is very painful for loading static resources
 
 The library is to convert static resource files into ts files
 
-Load from a virtual file system
+You can easily bundle static resources into your code
+
+Because it needs to be loaded into memory, it is not recommended to bundle large files
 
 ### Usage
 
