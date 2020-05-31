@@ -78,10 +78,18 @@ _loadFile("${fileName}", file)
 }
 
 function printHelpInformation() {
-  console.log(`
-Deno General Resources Packager
+  console.log(`Deno General Resources Packager
 
-pkger --include=./input_dir out=./output_dir`);
+Usage:
+  pkger --include=./input_dir out=./output_dir
+
+Options:
+  --help,-h         Print help information
+  --version,-v      Output version
+  --include         Directory of files to be bundle
+  -- out            Output directory
+`);
+
   Deno.exit(1);
 }
 
