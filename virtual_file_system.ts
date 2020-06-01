@@ -89,8 +89,6 @@ const fileSystem: VirtualFileSystem = {
     file._info.size = data.length;
     file._info.mtime = new Date();
   },
-
-  // TODO: apply options
   async remove(path: string, options?: Deno.RemoveOptions) {
     return fileSystem.removeSync(path, options);
   },
@@ -99,6 +97,14 @@ const fileSystem: VirtualFileSystem = {
 
     if (!file) {
       throw Deno.errors.NotFound;
+    }
+
+    if (options?.recursive) {
+      for (const key of fileMaps.keys()) {
+        if (key.startsWith(path)) {
+          fileMaps.delete(key);
+        }
+      }
     }
 
     fileMaps.delete(path);
