@@ -1,4 +1,4 @@
-import { VirtualFile, IVirtualFile } from "./virtual_file.ts";
+import { VirtualFile } from "./virtual_file.ts";
 
 const fileMaps = new Map<string, VirtualFile>();
 
@@ -35,13 +35,39 @@ const fileSystem: VirtualFileSystem = {
   },
   // TODO: apply options
   openSync(path: string, options?: Deno.OpenOptions): Deno.File {
-    const file = fileMaps.get(path);
+    if (options?.write) {
+      const file = fileMaps.get(path);
 
-    if (!file) {
-      throw Deno.errors.NotFound;
+      if (!file) {
+        throw Deno.errors.NotFound;
+      }
+
+      return file;
     }
 
-    return file._clone();
+    if (options?.create) {
+      if (fileMaps.get(path)) {
+        throw Deno.errors.AlreadyExists;
+      }
+
+      const file = VirtualFile.create();
+
+      fileMaps.set(path, file);
+
+      return file;
+    }
+
+    // default it read the file
+    {
+      const file = fileMaps.get(path);
+
+      if (!file) {
+        throw Deno.errors.NotFound;
+      }
+
+      // return file._clone();
+      return file;
+    }
   },
   async stat(path: string) {
     return fileSystem.statSync(path);
