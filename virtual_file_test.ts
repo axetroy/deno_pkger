@@ -1,9 +1,9 @@
 import {
   assertEquals,
-  assertStrictEq,
+  assertStrictEquals,
   assert,
-} from "https://deno.land/std@v0.54.0/testing/asserts.ts";
-import { StringReader } from "https://deno.land/std@v0.54.0/io/readers.ts";
+} from "https://deno.land/std@v0.59.0/testing/asserts.ts";
+import { StringReader } from "https://deno.land/std@v0.59.0/io/readers.ts";
 
 import { VirtualFile } from "./virtual_file.ts";
 
@@ -15,16 +15,16 @@ Deno.test({
     assertEquals(file._content, new Uint8Array());
     assertEquals(file._content.length, 0);
 
-    assertStrictEq(await file.read(new Uint8Array()), null);
+    assertStrictEquals(await file.read(new Uint8Array()), null);
 
     const beforeUpdate = file._info.mtime as Date;
 
-    assertStrictEq(
+    assertStrictEquals(
       await file.write(new TextEncoder().encode("hello world")),
       "hello world".length,
     );
 
-    assertStrictEq(
+    assertStrictEquals(
       new TextDecoder().decode(file._content),
       "hello world",
     );
