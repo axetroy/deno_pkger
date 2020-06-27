@@ -3,6 +3,7 @@ import { walk, ensureDir } from "https://deno.land/std@v0.59.0/fs/mod.ts";
 import { parse } from "https://deno.land/std@v0.59.0/flags/mod.ts";
 
 export const version = "v0.1.0";
+export let name = false;
 
 export async function generateBundle(dir: string, outDir: string) {
   dir = path.isAbsolute(dir) ? dir : path.join(Deno.cwd(), dir);
@@ -51,9 +52,13 @@ export async function generateBundle(dir: string, outDir: string) {
 
     const targetFile = path.join(outDir, fileName + ".bundle.ts");
 
+    const module = name
+      ? name
+      : `https://denopkg.com/axetroy/deno_pkger@${version}/mod.ts`;
+
     const content = `// Generate by https://github.com/axetroy/deno_pkger
 // DO NOT MODIFY IT
-import { VirtualFile, _loadFile } from "https://denopkg.com/axetroy/deno_pkger/mod.ts"
+import { VirtualFile, _loadFile } from "${module}";
 
 const file = new VirtualFile(0)
 
@@ -85,10 +90,11 @@ Usage:
   pkger --include=./input_dir out=./output_dir
 
 Options:
+  --include         Directory of files to be bundle
+  --out             Output directory
+  --name            Specify the generated file, the name of the module to be imported
   --help,-h         Print help information
   --version,-v      Output version
-  --include         Directory of files to be bundle
-  -- out            Output directory
 `);
 
   Deno.exit(1);
@@ -96,6 +102,10 @@ Options:
 
 if (import.meta.main) {
   const flags = parse(Deno.args);
+
+  if (flags.name) {
+    name = flags.name;
+  }
 
   if (flags.h || flags.help) {
     printHelpInformation();

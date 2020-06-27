@@ -18,6 +18,7 @@ async function generate() {
       "-A",
       "--unstable",
       "./pkger.ts",
+      "--name=pkger",
       "--include=./__test__/basic/static",
       "--out=./__test__/basic/dist",
     ],
