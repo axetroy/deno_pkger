@@ -2,7 +2,9 @@ import * as path from "https://deno.land/std@v0.59.0/path/mod.ts";
 import { walk, ensureDir } from "https://deno.land/std@v0.59.0/fs/mod.ts";
 import { parse } from "https://deno.land/std@v0.59.0/flags/mod.ts";
 
-async function generateBundle(dir: string, outDir: string) {
+export const version = "v0.1.0";
+
+export async function generateBundle(dir: string, outDir: string) {
   dir = path.isAbsolute(dir) ? dir : path.join(Deno.cwd(), dir);
   outDir = path.isAbsolute(outDir) ? outDir : path.join(Deno.cwd(), outDir);
 
@@ -97,6 +99,11 @@ if (import.meta.main) {
 
   if (flags.h || flags.help) {
     printHelpInformation();
+  }
+
+  if (flags.v || flags.version) {
+    console.log(version);
+    Deno.exit(0);
   }
 
   if (!flags.include || !flags.out) {

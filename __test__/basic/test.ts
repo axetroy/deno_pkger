@@ -1,6 +1,6 @@
 import {
   assertEquals,
-} from "https://deno.land/std@v0.54.0/testing/asserts.ts";
+} from "https://deno.land/std@v0.59.0/testing/asserts.ts";
 import fs from "../../mod.ts";
 
 const keys = [
@@ -27,8 +27,6 @@ async function generate() {
 
   await ps.status();
 
-  ps.stdout?.close();
-  ps.stderr?.close();
   ps.close();
 }
 
@@ -115,7 +113,6 @@ Deno.test({
     }
 
     ps.stdout?.close();
-    ps.stderr?.close();
     ps.close();
   },
 });
@@ -150,7 +147,6 @@ Deno.test({
     );
 
     ps.stdout?.close();
-    ps.stderr?.close();
     ps.close();
   },
 });
