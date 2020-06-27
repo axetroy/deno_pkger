@@ -1,6 +1,6 @@
-import * as path from "https://deno.land/std@v0.54.0/path/mod.ts";
-import { walk, ensureDir } from "https://deno.land/std@v0.54.0/fs/mod.ts";
-import { parse } from "https://deno.land/std@v0.54.0/flags/mod.ts";
+import * as path from "https://deno.land/std@v0.59.0/path/mod.ts";
+import { walk, ensureDir } from "https://deno.land/std@v0.59.0/fs/mod.ts";
+import { parse } from "https://deno.land/std@v0.59.0/flags/mod.ts";
 
 async function generateBundle(dir: string, outDir: string) {
   dir = path.isAbsolute(dir) ? dir : path.join(Deno.cwd(), dir);
@@ -47,10 +47,7 @@ async function generateBundle(dir: string, outDir: string) {
 
     const fileName = fileInfo.path.replace(dir, "");
 
-    const targetFile = path.join(
-      outDir,
-      fileName + ".bundle.ts",
-    );
+    const targetFile = path.join(outDir, fileName + ".bundle.ts");
 
     const content = `// Generate by https://github.com/axetroy/deno_pkger
 // DO NOT MODIFY IT
@@ -61,7 +58,11 @@ const file = new VirtualFile(0)
 await file.write(new Uint8Array([${arr}]))
 
 file._info = {
-${getInfo().map((v) => "  " + v).join(",\n")}
+${
+      getInfo()
+        .map((v) => "  " + v)
+        .join(",\n")
+    }
 };
 
 _loadFile("${fileName.replace(/\\/g, "/")}", file)
@@ -69,11 +70,9 @@ _loadFile("${fileName.replace(/\\/g, "/")}", file)
 
     await ensureDir(path.dirname(targetFile));
 
-    await Deno.writeFile(
-      targetFile,
-      new TextEncoder().encode(content),
-      { create: true },
-    );
+    await Deno.writeFile(targetFile, new TextEncoder().encode(content), {
+      create: true,
+    });
   }
 }
 
@@ -93,14 +92,16 @@ Options:
   Deno.exit(1);
 }
 
-const flags = parse(Deno.args);
+if (import.meta.main) {
+  const flags = parse(Deno.args);
 
-if (flags.h || flags.help) {
-  printHelpInformation();
+  if (flags.h || flags.help) {
+    printHelpInformation();
+  }
+
+  if (!flags.include || !flags.out) {
+    printHelpInformation();
+  }
+
+  await generateBundle(flags.include, flags.out);
 }
-
-if (!flags.include || !flags.out) {
-  printHelpInformation();
-}
-
-await generateBundle(flags.include, flags.out);
